@@ -1,0 +1,13 @@
+# Mantiene activo el proyecto gratuito de Supabase (se pausa tras 7 días sin actividad)
+name: keepalive
+on:
+  schedule:
+    - cron: '17 6 */3 * *'
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          curl -fsS -X POST "https://lkqfubnlkirgwgbqwbos.supabase.co/rest/v1/rpc/lot_public_state" \
+            -H "apikey: sb_publishable_vj0siYGYecyY2zGIUsbG4A_SiZoSs9J" -H "Content-Type: application/json" -d '{}'
