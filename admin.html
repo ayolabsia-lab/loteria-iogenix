@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel Lotería iO.GENIX</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:ital,wght@1,600;1,700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .wrap { max-width: 1100px; }
+  .adm-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0 6px; flex-wrap: wrap; }
+  .adm-top img { width: 150px; }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 6px 0 2px; scrollbar-width: none; }
+  .tabs button { flex: none; border: 1px solid var(--line); background: #0e0c08; color: var(--muted); border-radius: 999px; padding: 9px 14px; font: inherit; font-weight: 700; font-size: .85rem; cursor: pointer; }
+  .tabs button.on { background: linear-gradient(100deg, #b5882b, #f2d98f 50%, #c1923a); color: #1a1408; border-color: transparent; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .kpi { background: #0e0c08; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .kpi b { display: block; font-family: 'Archivo Black', var(--font); font-size: 1.8rem; color: var(--gold-2); line-height: 1.1; }
+  .kpi span { font-size: .78rem; color: var(--muted); }
+  .tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid #2a2316; white-space: nowrap; }
+  th { color: var(--muted); font-weight: 700; font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; background: #120f0a; position: sticky; top: 0; }
+  td.num { font-family: 'Archivo Black', var(--font); letter-spacing: .05em; color: var(--gold-2); }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+  .row > * { flex: 1 1 180px; }
+  .row .btn { flex: 0 0 auto; }
+  .bars { display: flex; align-items: flex-end; gap: 3px; height: 120px; padding-top: 10px; }
+  .bars div { flex: 1; background: linear-gradient(180deg, #ecd38a, #8a6a22); border-radius: 4px 4px 0 0; min-height: 2px; position: relative; }
+  .bars div:hover::after { content: attr(data-t); position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: #f2e3b4; color: #1a1408; font-size: .7rem; padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+  .pack-ed { border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 12px; background: #0e0c08; }
+  textarea { min-height: 90px; resize: vertical; }
+  .pager { display: flex; gap: 8px; align-items: center; justify-content: flex-end; margin-top: 10px; }
+  code.box { display: block; padding: 12px; background: #0e0c08; border: 1px solid var(--line); border-radius: 10px; word-break: break-all; color: var(--gold-2); font-size: .85rem; }
+  .login { max-width: 420px; margin: 8vh auto 0; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section id="login" class="card login">
+    <img src="assets/logo.svg" alt="iO.GENIX" style="width:170px;margin:0 auto 16px">
+    <h2 style="text-align:center">Panel de la Lotería</h2>
+    <form id="login-form">
+      <label>Contraseña del equipo <input type="password" id="pw" autocomplete="current-password" required></label>
+      <button class="btn btn-gold" type="submit">Entrar</button>
+      <p id="login-msg" class="msg err"></p>
+    </form>
+  </section>
+
+  <section id="app" hidden>
+    <div class="adm-top">
+      <img src="assets/logo.svg" alt="iO.GENIX">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-dark btn-sm" id="b-refresh">Actualizar</button>
+        <a class="btn btn-dark btn-sm" href="index.html" target="_blank" rel="noopener">Ver app</a>
+        <button class="btn btn-ghost btn-sm" id="b-logout">Salir</button>
+      </div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button data-tab="resumen" class="on">Resumen</button>
+      <button data-tab="participantes">Participantes</button>
+      <button data-tab="resultado">Resultado del Gordo</button>
+      <button data-tab="tombola">Tómbola</button>
+      <button data-tab="packs">Packs</button>
+      <button data-tab="ajustes">Ajustes</button>
+    </nav>
+
+    <!-- RESUMEN -->
+    <div data-pane="resumen">
+      <div class="card">
+        <h2>Resumen</h2>
+        <div class="kpis" id="kpis"></div>
+        <h3 style="margin-top:20px">Décimos por día</h3>
+        <div class="bars" id="bars"></div>
+        <p class="small" id="phase-info"></p>
+      </div>
+    </div>
+
+    <!-- PARTICIPANTES -->
+    <div data-pane="participantes" hidden>
+      <div class="card">
+        <h2>Participantes</h2>
+        <div class="row">
+          <label>Buscar (pedido, email o número)<input type="text" id="q"></label>
+          <label>Mostrar
+            <select id="filter">
+              <option value="todos">Todos (sin pruebas)</option>
+              <option value="activo">Activos</option>
+              <option value="anulado">Anulados</option>
+              <option value="compartido">Han compartido</option>
+              <option value="premio">Con premio</option>
+              <option value="prueba">Pruebas</option>
+            </select>
+          </label>
+          <button class="btn btn-dark" id="b-csv">Exportar CSV</button>
+        </div>
+        <div class="tbl-wrap"><table><thead><tr><th>Fecha</th><th>Pedido</th><th>Email</th><th>Número</th><th>Estado</th><th>Compartido</th><th>Premio</th><th></th></tr></thead><tbody id="tbody"></tbody></table></div>
+        <div class="pager"><span class="small" id="pg-info"></span><button class="btn btn-dark btn-sm" id="pg-prev">‹</button><button class="btn btn-dark btn-sm" id="pg-next">›</button></div>
+      </div>
+      <div class="card">
+        <h2>Anular pedidos cancelados o devueltos</h2>
+        <p class="small">Pega las referencias (una por línea o separadas por comas). Sus décimos quedarán anulados y no participarán en premios ni en la tómbola.</p>
+        <textarea id="bulk" placeholder="XKBKNABJK&#10;QWERTYUIO"></textarea>
+        <div class="row" style="margin-top:10px"><label>Motivo<input type="text" id="bulk-note" value="Pedido cancelado o devuelto"></label><button class="btn btn-gold" id="b-bulk" style="width:auto">Anular</button></div>
+        <p class="msg" id="bulk-msg"></p>
+      </div>
+    </div>
+
+    <!-- RESULTADO -->
+    <div data-pane="resultado" hidden>
+      <div class="card">
+        <h2>Resultado del Gordo</h2>
+        <p class="small">Escribe el número del primer premio del Sorteo de Navidad. «Calcular ganadores» solo lo ve el equipo; «Publicar» activa la comprobación en la app para todos los clientes.</p>
+        <div class="row">
+          <label>Número del Gordo (5 cifras)<input type="text" id="win" inputmode="numeric" maxlength="5" placeholder="00000"></label>
+          <button class="btn btn-dark" id="b-preview">Calcular ganadores</button>
+          <button class="btn btn-gold" id="b-publish" style="width:auto">Publicar resultado</button>
+          <button class="btn btn-ghost" id="b-unpublish">Despublicar</button>
+        </div>
+        <p class="msg" id="win-msg"></p>
+      </div>
+      <div class="card">
+        <h2>Ganadores <span class="small" id="win-sum"></span></h2>
+        <p class="small">Añade el código del cupón de cada ganador: lo verá en la app al comprobar su décimo. Recuerda enviarlo también por email.</p>
+        <div class="tbl-wrap"><table><thead><tr><th>Premio</th><th>Pedido</th><th>Email</th><th>Número</th><th>Cupón</th><th></th></tr></thead><tbody id="win-body"></tbody></table></div>
+        <p style="margin-top:12px"><button class="btn btn-dark btn-sm" id="b-win-csv">Exportar ganadores (CSV)</button></p>
+      </div>
+    </div>
+
+    <!-- TÓMBOLA -->
+    <div data-pane="tombola" hidden>
+      <div class="card">
+        <h2>Configuración de la tómbola</h2>
+        <p class="small">Lo que escribas aquí se muestra en la app. Participan los décimos activos sin premio en la lotería; compartir el décimo da una participación extra.</p>
+        <label class="check"><input type="checkbox" id="tb-activa"> <span>Mostrar la tómbola en la app con estos datos</span></label>
+        <label>Premio<input type="text" id="tb-premio" placeholder="Ej.: Pack Navidad iO.GENIX valorado en 100 €"></label>
+        <label>Descripción<textarea id="tb-desc" placeholder="Detalles del premio"></textarea></label>
+        <div class="row">
+          <label>Nº de ganadores<input type="number" id="tb-gan" min="0" value="0"></label>
+          <label>Nº de suplentes<input type="number" id="tb-sup" min="0" value="0"></label>
+          <label>Fecha del sorteo (texto)<input type="text" id="tb-fecha" placeholder="Ej.: 23 de diciembre"></label>
+        </div>
+        <button class="btn btn-gold" id="b-tb-save" style="width:auto">Guardar</button>
+        <p class="msg" id="tb-msg"></p>
+      </div>
+      <div class="card">
+        <h2>Realizar el sorteo</h2>
+        <p class="small">Requiere el resultado del Gordo publicado. Cada nuevo sorteo sustituye al anterior como oficial (queda el historial). Recomendado: grabar la pantalla al pulsar.</p>
+        <button class="btn btn-gold" id="b-tb-draw" style="width:auto">Sortear ahora</button>
+        <p class="msg" id="draw-msg"></p>
+        <div id="draws"></div>
+      </div>
+    </div>
+
+    <!-- PACKS -->
+    <div data-pane="packs" hidden>
+      <div class="card">
+        <h2>Packs exclusivos</h2>
+        <p class="small">Solo los ven quienes tienen décimo. Crea el producto en PrestaShop con visibilidad «En ninguna parte» y pega aquí su enlace directo.</p>
+        <div id="packs-ed"></div>
+        <div class="row"><button class="btn btn-dark" id="b-pack-add">+ Añadir pack</button><button class="btn btn-gold" id="b-pack-save" style="width:auto">Guardar packs</button></div>
+        <p class="msg" id="pack-msg"></p>
+      </div>
+    </div>
+
+    <!-- AJUSTES -->
+    <div data-pane="ajustes" hidden>
+      <div class="card">
+        <h2>Fechas y descuento</h2>
+        <div class="row">
+          <label>Apertura del registro<input type="datetime-local" id="cfg-open"></label>
+          <label>Cierre del registro<input type="datetime-local" id="cfg-close"></label>
+          <label>Sorteo (cuenta atrás)<input type="datetime-local" id="cfg-draw"></label>
+        </div>
+        <div class="row">
+          <label>Código de descuento<input type="text" id="cfg-code"></label>
+          <label>Texto del descuento<input type="text" id="cfg-dtext"></label>
+        </div>
+        <button class="btn btn-gold" id="b-cfg-save" style="width:auto">Guardar</button>
+        <p class="msg" id="cfg-msg"></p>
+      </div>
+      <div class="card">
+        <h2>Enlace para el email del pedido</h2>
+        <p class="small">En la plantilla de confirmación de pedido de PrestaShop (order_conf) añade un botón con este enlace. Rellena la referencia y el email automáticamente:</p>
+        <code class="box" id="email-link"></code>
+      </div>
+      <div class="card">
+        <h2>Pruebas</h2>
+        <p class="small">Cualquier referencia que empiece por <b>TEST</b> (por ejemplo TEST-ALFONSO-1) se puede registrar en cualquier momento, también antes del 1 de diciembre. No cuentan en estadísticas, premios ni tómbola.</p>
+        <button class="btn btn-dark" id="b-del-tests">Borrar todos los décimos de prueba</button>
+        <p class="msg" id="test-msg"></p>
+      </div>
+      <div class="card">
+        <h2>Cambiar contraseña del panel</h2>
+        <div class="row"><label>Nueva contraseña<input type="password" id="new-pw" autocomplete="new-password"></label><button class="btn btn-gold" id="b-pw" style="width:auto">Cambiar</button></div>
+        <p class="msg" id="pw-msg"></p>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="assets/config.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

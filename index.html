@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lotería iO.GENIX · Navidad 2026</title>
+<meta name="description" content="Cada pedido en la web de iO.GENIX del 1 al 21 de diciembre lleva su décimo para el Gordo de Navidad. Consigue el tuyo.">
+<meta property="og:title" content="Lotería iO.GENIX · Navidad 2026">
+<meta property="og:description" content="Consigue tu décimo para el Gordo de Navidad con tu pedido de diciembre.">
+<meta name="theme-color" content="#0b0a08">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:ital,wght@1,600;1,700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="snow" aria-hidden="true"></div>
+
+<header class="top"><img class="logo" src="assets/logo.svg" alt="iO.GENIX"></header>
+
+<main class="wrap">
+  <section class="hero">
+    <p class="eyebrow">Sorteo de Navidad · 22 de diciembre de 2026</p>
+    <h1>La Lotería <span>iO.GENIX</span></h1>
+    <p class="lead">Cada pedido en nuestra web del 1 al 21 de diciembre lleva su propio décimo para el Gordo de Navidad. Introduce la referencia de tu pedido y descubre tu número.</p>
+    <div class="prizes">
+      <div class="prize"><b>150 €</b><span>3 últimas cifras del Gordo</span></div>
+      <div class="prize"><b>500 €</b><span>4 últimas cifras del Gordo</span></div>
+      <div class="prize top"><b>1.000 €</b><span>El número del Gordo</span></div>
+    </div>
+    <p class="small">Premios en productos, con cupón para la web. No acumulables.</p>
+  </section>
+
+  <div id="phase-banner" class="banner" hidden></div>
+
+  <section id="form-card" class="card">
+    <h2 id="form-title">Consigue tu décimo</h2>
+    <form id="ticket-form" novalidate>
+      <label>Referencia del pedido
+        <input type="text" id="f-order" name="pedido" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ej.: XKBKNABJK" required>
+      </label>
+      <p class="hint">La encontrarás en el email de confirmación de tu pedido.</p>
+      <label>Email de la compra
+        <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" placeholder="tu@email.com" required>
+      </label>
+      <label class="check"><input type="checkbox" id="f-accept" required>
+        <span>He leído y acepto las <a href="bases.html" target="_blank" rel="noopener">bases legales</a>, incluida la información sobre protección de datos.</span>
+      </label>
+      <button class="btn btn-gold" type="submit" id="f-submit">Conseguir mi décimo</button>
+      <p id="form-msg" class="msg" role="alert" aria-live="polite"></p>
+    </form>
+    <div id="mine" class="mine" hidden></div>
+  </section>
+
+  <section id="ticket-view" hidden>
+    <div class="card">
+      <div class="ticket-head">
+        <p class="eyebrow">Tu décimo · pedido <span id="t-order"></span></p>
+        <div class="big-number" id="t-number">00000</div>
+        <p id="t-status" class="small"></p>
+      </div>
+      <div id="t-img-wrap" class="decimo-img loading">Preparando tu décimo…</div>
+      <div class="btn-row">
+        <button class="btn btn-gold full" id="b-share">Compartir en stories</button>
+        <button class="btn btn-ghost" id="b-dl">Descargar décimo</button>
+        <button class="btn btn-ghost" id="b-dl-story">Descargar para stories</button>
+      </div>
+      <p id="share-msg" class="small" style="text-align:center;margin:12px 0 0"></p>
+      <p id="share-confirm-wrap" style="text-align:center;margin:6px 0 0" hidden>
+        <button class="btn btn-dark btn-sm" id="b-shared">Ya la he compartido</button>
+      </p>
+    </div>
+
+    <div class="card" id="check-card"></div>
+    <div class="card" id="code-card"></div>
+    <div class="card" id="packs-card"></div>
+    <div class="card" id="tombola-card"></div>
+
+    <p style="text-align:center"><button class="btn btn-ghost" id="b-other">¿Tienes otro pedido? Consigue otro décimo</button></p>
+  </section>
+
+  <section class="card">
+    <h2>¿Cómo funciona?</h2>
+    <ol class="steps">
+      <li><b>Haz tu pedido</b> en tienda.iogenixnutrition.com entre el 1 y el 21 de diciembre. Sin pedido mínimo.</li>
+      <li><b>Introduce la referencia</b> del pedido y tu email aquí. Te asignamos al azar un número único de 5 cifras.</li>
+      <li><b>Llévate un 5 % extra</b> de descuento con el código que te damos al conseguir tu décimo, hasta el 30 de enero.</li>
+      <li><b>El 22 de diciembre</b> vuelve aquí: comprobamos tu número con el Gordo de Navidad.</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>Preguntas frecuentes</h2>
+    <details><summary>¿Cuántos décimos puedo tener?</summary><p>Uno por cada pedido. Si haces tres pedidos, tienes tres números distintos.</p></details>
+    <details><summary>¿Dónde encuentro la referencia del pedido?</summary><p>En el email de confirmación de tu compra y en tu cuenta de la tienda, en «Historial de pedidos». Es un código de letras, por ejemplo XKBKNABJK.</p></details>
+    <details><summary>¿Puedo elegir mi número?</summary><p>No. El número se asigna al azar y no se repite: cada décimo es único.</p></details>
+    <details><summary>¿Qué pasa si cancelo o devuelvo el pedido?</summary><p>El décimo asociado queda anulado y no participa en los premios.</p></details>
+    <details><summary>¿Cómo cobro el premio?</summary><p>Te enviamos un cupón de un solo uso al email del pedido para gastarlo en la web. También lo verás aquí al comprobar tu décimo.</p></details>
+    <details><summary>¿Es lotería oficial?</summary><p>No. Es una promoción gratuita de iO.GENIX: tu número no es un décimo de Lotería Nacional, solo se compara con el resultado del Gordo del 22 de diciembre.</p></details>
+  </section>
+</main>
+
+<footer>
+  <nav>
+    <a href="bases.html">Bases legales</a>
+    <a href="https://tienda.iogenixnutrition.com/" rel="noopener">Tienda iO.GENIX</a>
+    <a href="mailto:info@iogenixnutrition.com">Contacto</a>
+  </nav>
+  <div>© 2026 AYOLABS, S.L. · iO.GENIX</div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/qr.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/decimo.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
