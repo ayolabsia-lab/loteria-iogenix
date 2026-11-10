@@ -45,7 +45,7 @@
   // ---------- Carga ----------
   async function load() {
     D = await rpc('lot_admin_dashboard', { p_pw: PW });
-    renderSummary(); renderTable(); renderWinners(); renderTombola(); renderPacks(); renderSettings();
+    renderSummary(); renderTable(); renderWinners(); renderSettings();
   }
 
   function renderSummary() {
@@ -148,59 +148,6 @@
   });
   $('#b-win-csv').addEventListener('click', () => {
     csv([['Premio (€)', 'Pedido', 'Email', 'Número', 'Cupón']].concat(winners().map((t) => [t.prize, t.order_ref, t.email, t.number, t.prize_code || ''])), 'loteria-iogenix-ganadores.csv');
-  });
-
-  // ---------- Tómbola ----------
-  function renderTombola() {
-    const t = D.config.tombola || {};
-    $('#tb-activa').checked = !!t.activa;
-    $('#tb-premio').value = t.premio || '';
-    $('#tb-desc').value = t.descripcion || '';
-    $('#tb-gan').value = t.ganadores || 0;
-    $('#tb-sup').value = t.suplentes || 0;
-    $('#tb-fecha').value = t.fecha || '';
-    $('#draws').innerHTML = (D.tombola_draws || []).map((d) => `<div class="card" style="box-shadow:none;margin:12px 0 0">
-      <p style="margin:0 0 8px">${d.official ? '<span class="badge green">oficial</span>' : '<span class="badge">anterior</span>'} <span class="small">${fmt(d.created_at)} · ${d.pool_size} décimos · ${d.entries} participaciones</span></p>
-      <p style="margin:0"><b>Ganadores:</b> ${d.winners.map((w) => `${esc(w.order_ref)} (${esc(w.email)}, nº ${w.number})`).join(' · ')}</p>
-      ${d.substitutes.length ? `<p class="small" style="margin:6px 0 0"><b>Suplentes:</b> ${d.substitutes.map((w) => `${esc(w.order_ref)} (${esc(w.email)})`).join(' · ')}</p>` : ''}</div>`).join('');
-  }
-  function tombolaCfg() {
-    return { activa: $('#tb-activa').checked, premio: $('#tb-premio').value.trim(), descripcion: $('#tb-desc').value.trim(),
-      ganadores: +$('#tb-gan').value || 0, suplentes: +$('#tb-sup').value || 0, fecha: $('#tb-fecha').value.trim() };
-  }
-  $('#b-tb-save').addEventListener('click', async () => {
-    try { await rpc('lot_admin_save_config', { p_pw: PW, p_cfg: { tombola: tombolaCfg() } }); await load(); msg('#tb-msg', 'Guardado.', true); }
-    catch (err) { msg('#tb-msg', err.message); }
-  });
-  $('#b-tb-draw').addEventListener('click', async () => {
-    const c = tombolaCfg();
-    if (!c.ganadores) return msg('#draw-msg', 'Indica el número de ganadores en la configuración y guárdala.');
-    if (!confirm(`¿Sortear ahora ${c.ganadores} ganador(es) y ${c.suplentes} suplente(s)?`)) return;
-    try {
-      await rpc('lot_admin_tombola_draw', { p_pw: PW, p_winners: c.ganadores, p_substitutes: c.suplentes, p_note: c.premio || null });
-      await load(); msg('#draw-msg', 'Sorteo realizado. Los participantes verán su resultado en la app.', true);
-    } catch (err) { msg('#draw-msg', err.message); }
-  });
-
-  // ---------- Packs ----------
-  const PF = [['nombre', 'Nombre'], ['descripcion', 'Descripción'], ['precio', 'Precio (ej. 59,90 €)'], ['precio_antes', 'Precio anterior (opcional)'], ['imagen', 'URL de la imagen'], ['url', 'Enlace al producto en la tienda']];
-  let packs = [];
-  function renderPacks() {
-    packs = JSON.parse(JSON.stringify(D.config.packs || []));
-    drawPacks();
-  }
-  function drawPacks() {
-    $('#packs-ed').innerHTML = packs.length ? packs.map((p, i) => `<div class="pack-ed"><div class="row">${PF.map(([k, l]) =>
-      `<label>${l}<input type="text" data-i="${i}" data-k="${k}" value="${esc(p[k] || '')}"></label>`).join('')}</div>
-      <button class="btn btn-ghost btn-sm" data-del="${i}">Eliminar pack</button></div>`).join('') : '<p class="soon">Sin packs todavía. En la app se muestra «Muy pronto».</p>';
-  }
-  $('#packs-ed').addEventListener('input', (e) => { const i = e.target.dataset.i; if (i != null) packs[i][e.target.dataset.k] = e.target.value; });
-  $('#packs-ed').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { packs.splice(+b.dataset.del, 1); drawPacks(); } });
-  $('#b-pack-add').addEventListener('click', () => { packs.push({}); drawPacks(); });
-  $('#b-pack-save').addEventListener('click', async () => {
-    const clean = packs.filter((p) => p.nombre && p.nombre.trim());
-    try { await rpc('lot_admin_save_config', { p_pw: PW, p_cfg: { packs: clean } }); await load(); msg('#pack-msg', 'Packs guardados.', true); }
-    catch (err) { msg('#pack-msg', err.message); }
   });
 
   // ---------- Ajustes ----------

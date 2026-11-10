@@ -64,8 +64,6 @@
       <button data-tab="resumen" class="on">Resumen</button>
       <button data-tab="participantes">Participantes</button>
       <button data-tab="resultado">Resultado del Gordo</button>
-      <button data-tab="tombola">Tómbola</button>
-      <button data-tab="packs">Packs</button>
       <button data-tab="ajustes">Ajustes</button>
     </nav>
 
@@ -103,7 +101,7 @@
       </div>
       <div class="card">
         <h2>Anular pedidos cancelados o devueltos</h2>
-        <p class="small">Pega las referencias (una por línea o separadas por comas). Sus décimos quedarán anulados y no participarán en premios ni en la tómbola.</p>
+        <p class="small">Pega las referencias (una por línea o separadas por comas). Sus décimos quedarán anulados y no participarán en los premios.</p>
         <textarea id="bulk" placeholder="XKBKNABJK&#10;QWERTYUIO"></textarea>
         <div class="row" style="margin-top:10px"><label>Motivo<input type="text" id="bulk-note" value="Pedido cancelado o devuelto"></label><button class="btn btn-gold" id="b-bulk" style="width:auto">Anular</button></div>
         <p class="msg" id="bulk-msg"></p>
@@ -131,42 +129,6 @@
       </div>
     </div>
 
-    <!-- TÓMBOLA -->
-    <div data-pane="tombola" hidden>
-      <div class="card">
-        <h2>Configuración de la tómbola</h2>
-        <p class="small">Lo que escribas aquí se muestra en la app. Participan los décimos activos sin premio en la lotería; compartir el décimo da una participación extra.</p>
-        <label class="check"><input type="checkbox" id="tb-activa"> <span>Mostrar la tómbola en la app con estos datos</span></label>
-        <label>Premio<input type="text" id="tb-premio" placeholder="Ej.: Pack Navidad iO.GENIX valorado en 100 €"></label>
-        <label>Descripción<textarea id="tb-desc" placeholder="Detalles del premio"></textarea></label>
-        <div class="row">
-          <label>Nº de ganadores<input type="number" id="tb-gan" min="0" value="0"></label>
-          <label>Nº de suplentes<input type="number" id="tb-sup" min="0" value="0"></label>
-          <label>Fecha del sorteo (texto)<input type="text" id="tb-fecha" placeholder="Ej.: 23 de diciembre"></label>
-        </div>
-        <button class="btn btn-gold" id="b-tb-save" style="width:auto">Guardar</button>
-        <p class="msg" id="tb-msg"></p>
-      </div>
-      <div class="card">
-        <h2>Realizar el sorteo</h2>
-        <p class="small">Requiere el resultado del Gordo publicado. Cada nuevo sorteo sustituye al anterior como oficial (queda el historial). Recomendado: grabar la pantalla al pulsar.</p>
-        <button class="btn btn-gold" id="b-tb-draw" style="width:auto">Sortear ahora</button>
-        <p class="msg" id="draw-msg"></p>
-        <div id="draws"></div>
-      </div>
-    </div>
-
-    <!-- PACKS -->
-    <div data-pane="packs" hidden>
-      <div class="card">
-        <h2>Packs exclusivos</h2>
-        <p class="small">Solo los ven quienes tienen décimo. Crea el producto en PrestaShop con visibilidad «En ninguna parte» y pega aquí su enlace directo.</p>
-        <div id="packs-ed"></div>
-        <div class="row"><button class="btn btn-dark" id="b-pack-add">+ Añadir pack</button><button class="btn btn-gold" id="b-pack-save" style="width:auto">Guardar packs</button></div>
-        <p class="msg" id="pack-msg"></p>
-      </div>
-    </div>
-
     <!-- AJUSTES -->
     <div data-pane="ajustes" hidden>
       <div class="card">
@@ -190,7 +152,7 @@
       </div>
       <div class="card">
         <h2>Pruebas</h2>
-        <p class="small">Cualquier referencia que empiece por <b>TEST</b> (por ejemplo TEST-ALFONSO-1) se puede registrar en cualquier momento, también antes del 1 de diciembre. No cuentan en estadísticas, premios ni tómbola.</p>
+        <p class="small">Cualquier referencia que empiece por <b>TEST</b> (por ejemplo TEST-ALFONSO-1) se puede registrar en cualquier momento, también antes del 1 de diciembre. No cuentan en estadísticas ni en premios.</p>
         <button class="btn btn-dark" id="b-del-tests">Borrar todos los décimos de prueba</button>
         <p class="msg" id="test-msg"></p>
       </div>

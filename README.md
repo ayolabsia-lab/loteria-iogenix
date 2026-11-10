@@ -23,7 +23,7 @@ https://ayolabsia-lab.github.io/loteria-iogenix/?pedido={order_name}&email={emai
 
 ## Pruebas
 
-Las referencias que empiezan por `TEST` se pueden registrar en cualquier momento y no cuentan en estadísticas, premios ni tómbola. Se borran desde *Ajustes → Pruebas*.
+Las referencias que empiezan por `TEST` se pueden registrar en cualquier momento y no cuentan en estadísticas ni en premios. Se borran desde *Ajustes → Pruebas*.
 
 ## Mantenimiento
 

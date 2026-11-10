@@ -121,8 +121,6 @@
 
     renderCheck(t);
     renderCode(t);
-    renderPacks(t);
-    renderTombola(t);
     updateShareUI(t);
 
     const wrap = $('#t-img-wrap');
@@ -164,7 +162,7 @@
           ? `<div class="code"><b>${esc(t.prize_code)}</b><button class="btn btn-ghost btn-sm" data-copy="${esc(t.prize_code)}">Copiar</button></div><p class="small">Cupón de un solo uso para un único pedido en la web.</p>`
           : '<p class="small" style="text-align:center">Te enviaremos tu cupón al email del pedido en los próximos días. También aparecerá aquí.</p>';
       } else {
-        html += '<p class="win" style="color:var(--text)">Esta vez no ha tocado… ¡pero sigues dentro de la tómbola!</p><p class="small" style="text-align:center">Todos los décimos sin premio participan en la tómbola de iO.GENIX.</p>';
+        html += '<p class="win" style="color:var(--text)">Esta vez no ha tocado… ¡gracias por participar!</p><p class="small" style="text-align:center">Tu código de descuento sigue activo hasta el 30 de enero.</p>';
       }
       box.innerHTML = html;
     } else {
@@ -192,58 +190,8 @@
       <a class="btn btn-gold" href="${esc(window.LOT_CONFIG.SHOP_URL)}" rel="noopener">Ir a la tienda</a>`;
   }
 
-  function renderPacks(t) {
-    const box = $('#packs-card');
-    const packs = Array.isArray(t.packs) ? t.packs.filter((p) => p && p.nombre) : [];
-    if (t.status === 'anulado') { box.hidden = true; return; }
-    box.hidden = false;
-    if (!packs.length) {
-      box.innerHTML = '<h2>Packs de Navidad exclusivos</h2><div class="soon"><span class="icon">🎄</span>Muy pronto: packs especiales que solo podrás ver desde aquí, por tener tu décimo.</div>';
-      return;
-    }
-    box.innerHTML = '<h2>Packs de Navidad exclusivos</h2><p class="small">Solo para quienes tenéis décimo. Hasta fin de existencias.</p><div class="packs">' +
-      packs.map((p) => `<article class="pack">
-        ${p.imagen ? `<img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" loading="lazy">` : ''}
-        <div class="body"><h3>${esc(p.nombre)}</h3>
-          ${p.descripcion ? `<p class="small" style="margin:0">${esc(p.descripcion)}</p>` : ''}
-          ${p.precio ? `<div class="price">${esc(p.precio)}${p.precio_antes ? `<s>${esc(p.precio_antes)}</s>` : ''}</div>` : ''}
-          ${p.url ? `<a class="btn btn-gold btn-sm" href="${esc(p.url)}" rel="noopener">Lo quiero</a>` : ''}
-        </div></article>`).join('') + '</div>';
-  }
-
-  function renderTombola(t) {
-    const box = $('#tombola-card');
-    const tb = (state && state.tombola) || {};
-    let html = '<h2>Tómbola iO.GENIX</h2>';
-    if (t.prize > 0) {
-      box.innerHTML = html + '<p class="small">Tu décimo ya tiene premio en la Lotería iO.GENIX, así que la tómbola queda para los décimos sin premio. ¡Disfruta del tuyo!</p>';
-      return;
-    }
-    if (t.tombola && t.tombola.resultado === 'ganador') {
-      html += '<p class="win">🎉 ¡Tu décimo ha salido en la tómbola! Te escribiremos al email del pedido.</p>';
-    } else if (t.tombola && t.tombola.resultado === 'suplente') {
-      html += '<p class="small">Tu décimo ha quedado como <b>suplente</b> en la tómbola. Si algún ganador no cumple las bases, te avisaremos.</p>';
-    } else if (t.tombola && t.tombola.resultado === 'no') {
-      html += '<p class="small">La tómbola ya se ha sorteado y esta vez no ha habido suerte. ¡Gracias por participar!</p>';
-    } else if (tb.activa && tb.premio) {
-      html += `<p style="margin:0 0 6px"><b>${esc(tb.premio)}</b></p>` +
-        (tb.descripcion ? `<p class="small">${esc(tb.descripcion)}</p>` : '') +
-        `<p class="small">Entre todos los décimos sin premio${tb.fecha ? ' · Sorteo: ' + esc(tb.fecha) : ''}${tb.ganadores ? ' · ' + esc(tb.ganadores) + ' ganador' + (tb.ganadores > 1 ? 'es' : '') : ''}.</p>`;
-    } else {
-      html += '<div class="soon"><span class="icon">🎁</span>Muy pronto te contamos el premio y la fecha. Participan todos los décimos que no tengan premio en la lotería.</div>';
-    }
-    if (!t.tombola && t.status !== 'anulado') {
-      html += t.shared
-        ? '<p class="msg ok" style="text-align:center">✔ Tienes 2 participaciones en la tómbola por compartir tu décimo.</p>'
-        : '<p class="small" style="text-align:center"><b>¿Quieres una participación extra?</b> Comparte tu décimo en tus stories.</p>';
-    }
-    box.innerHTML = html;
-  }
-
-  function updateShareUI(t) {
-    const m = $('#share-msg');
-    m.textContent = t.shared ? '✔ Participación extra en la tómbola conseguida.' : 'Compártelo en tus stories y consigue una participación extra en la tómbola.';
-    $('#share-confirm-wrap').hidden = true;
+  function updateShareUI() {
+    $('#share-msg').textContent = 'Compártelo en tus stories y que tus amigos también consigan el suyo.';
   }
 
   async function markShared() {
@@ -251,9 +199,7 @@
     try {
       await rpc('lot_mark_shared', { p_order: current.order, p_email: current.email });
       current.ticket.shared = true;
-      updateShareUI(current.ticket);
-      renderTombola(current.ticket);
-      toast('¡Participación extra conseguida!');
+      toast('¡Gracias por compartir!');
     } catch (e) { /* silencioso */ }
   }
 
@@ -266,14 +212,7 @@
   }
 
   $('#b-dl').addEventListener('click', () => download(images.decimo, `decimo-iogenix-${current.ticket.number}.png`));
-  $('#b-dl-story').addEventListener('click', () => {
-    download(images.story, `stories-iogenix-${current.ticket.number}.png`);
-    if (!current.ticket.shared) {
-      $('#share-msg').textContent = 'Súbela a tus stories y después pulsa el botón para sumar tu participación extra.';
-      $('#share-confirm-wrap').hidden = false;
-    }
-  });
-  $('#b-shared').addEventListener('click', markShared);
+  $('#b-dl-story').addEventListener('click', () => download(images.story, `stories-iogenix-${current.ticket.number}.png`));
   $('#b-share').addEventListener('click', async () => {
     if (!images.story) { toast('La imagen aún se está generando…'); return; }
     const file = new File([images.story], `iogenix-decimo-${current.ticket.number}.png`, { type: 'image/png' });
@@ -287,8 +226,7 @@
       }
     } else {
       download(images.story, `stories-iogenix-${current.ticket.number}.png`);
-      $('#share-msg').textContent = 'Te hemos descargado la imagen. Súbela a tus stories y después pulsa el botón para sumar tu participación extra.';
-      $('#share-confirm-wrap').hidden = false;
+      $('#share-msg').textContent = 'Te hemos descargado la imagen: súbela a tus stories.';
     }
   });
   $('#b-other').addEventListener('click', () => {
