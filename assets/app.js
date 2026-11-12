@@ -253,7 +253,7 @@
     renderMine();
     const qs = new URLSearchParams(location.search);
     const qOrder = qs.get('pedido') || qs.get('ref') || '';
-    const qEmail = qs.get('email') || '';
+    const qEmail = (qs.get('email') || '').trim().replace(/ /g, '+'); // un '+' del email llega como espacio
     if (qOrder) $('#f-order').value = qOrder;
     if (qEmail) $('#f-email').value = qEmail;
     await loadState();
